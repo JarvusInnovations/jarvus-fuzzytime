@@ -3,36 +3,64 @@
 Ext.define('Jarvus.util.format.FuzzyTime', {
     override: 'Ext.util.Format',
 
-    fuzzyTime: function(date) {
+    timeUnits: {
+        second: 'second',
+        minute: 'minute',
+        hour: 'hour',
+        day: 'day',
+        month: 'month'
+    },
+
+    timeUnitAbbreviations: {
+        second: 's',
+        minute: 'm',
+        hour: 'h',
+        day: 'd',
+        month: 'mo'
+    },
+
+    fuzzyTime: function(date, abbreviate) {
+        var milliseconds = Date.now() - date.getTime();
+
+        if (milliseconds <= 0) {
+            return Ext.util.Format.date(date, 'D, M j, g:i a');
+        }
+
+        return this.fuzzyDuration(milliseconds, abbreviate);
+    },
+
+    fuzzyDuration: function(milliseconds, abbreviate) {
         var msPerMinute = 60 * 1000,
             msPerHour = msPerMinute * 60,
             msPerDay = msPerHour * 24,
             msPerMonth = msPerDay * 30,
             msPerYear = msPerDay * 365,
-            previous = date.getTime(),
-            elapsed = (new Date()).getTime() - previous,
-            qty;
+            qty, unit;
 
-        if (elapsed < 0) {
-            return Ext.util.Format.date(date, 'D, M j, g:i a');
-        } else if (elapsed < msPerMinute) {
-            qty = Math.round(elapsed/1000);
-            return qty + ' second'+(qty==1?'':'s');
-        } else if (elapsed < msPerHour) {
-            qty = Math.round(elapsed/msPerMinute);
-            return qty + ' minute'+(qty==1?'':'s');
-        } else if (elapsed < msPerDay ) {
-            qty = Math.round(elapsed/msPerHour);
-            return qty + ' hour'+(qty==1?'':'s');
-        } else if (elapsed < msPerMonth) {
-            qty = Math.round(elapsed/msPerDay);
-            return qty + ' day'+(qty==1?'':'s');
-        } else if (elapsed < msPerYear) {
-            qty = Math.round(elapsed/msPerMonth);
-            return qty + ' month'+(qty==1?'':'s');
+        if (milliseconds < msPerMinute) {
+            qty = Math.round(milliseconds / 1000);
+            unit = 'second';
+        } else if (milliseconds < msPerHour) {
+            qty = Math.round(milliseconds / msPerMinute);
+            unit = 'minute';
+        } else if (milliseconds < msPerDay) {
+            qty = Math.round(milliseconds / msPerHour);
+            unit = 'hour';
+        } else if (milliseconds < msPerMonth) {
+            qty = Math.round(milliseconds / msPerDay);
+            unit = 'day';
+        } else if (milliseconds < msPerYear) {
+            qty = Math.round(milliseconds / msPerMonth);
+            unit = 'month';
         } else {
-            qty = Math.round(elapsed/msPerYear);
-            return qty + ' year'+(qty==1?'':'s');
+            qty = Math.round(milliseconds / msPerYear);
+            unit = 'year';
         }
+
+        if (abbreviate) {
+            return qty + this.timeUnitAbbreviations[unit];
+        }
+
+        return qty + ' ' + this.timeUnits[unit] + (qty == 1 ? '' : 's');
     }
 });
