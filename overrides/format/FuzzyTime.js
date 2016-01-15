@@ -20,6 +20,10 @@ Ext.define('Jarvus.util.format.FuzzyTime', {
     },
 
     fuzzyTime: function(date, abbreviate) {
+        if (!date) {
+            return '';
+        }
+
         var milliseconds = Date.now() - date.getTime();
 
         if (milliseconds <= 0) {
@@ -36,6 +40,10 @@ Ext.define('Jarvus.util.format.FuzzyTime', {
             msPerMonth = msPerDay * 30,
             msPerYear = msPerDay * 365,
             qty, unit;
+
+        if (!milliseconds) {
+            return '';
+        }
 
         if (milliseconds < msPerMinute) {
             qty = Math.round(milliseconds / 1000);
