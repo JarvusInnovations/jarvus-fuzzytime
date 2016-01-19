@@ -24,11 +24,7 @@ Ext.define('Jarvus.util.format.FuzzyTime', {
             return '';
         }
 
-        var milliseconds = Date.now() - date.getTime();
-
-        if (milliseconds <= 0) {
-            return Ext.util.Format.date(date, 'D, M j, g:i a');
-        }
+        var milliseconds = Math.max(0, Date.now() - date.getTime());
 
         return this.fuzzyDuration(milliseconds, abbreviate);
     },
