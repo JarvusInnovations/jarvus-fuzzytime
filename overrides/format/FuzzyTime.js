@@ -16,7 +16,8 @@ Ext.define('Jarvus.util.format.FuzzyTime', {
         minute: 'm',
         hour: 'h',
         day: 'd',
-        month: 'mo'
+        month: 'mo',
+        year: 'yr'
     },
 
     fuzzyTime: function(date, abbreviate) {
