@@ -8,7 +8,8 @@ Ext.define('Jarvus.util.format.FuzzyTime', {
         minute: 'minute',
         hour: 'hour',
         day: 'day',
-        month: 'month'
+        month: 'month',
+        year: 'year'
     },
 
     timeUnitAbbreviations: {
